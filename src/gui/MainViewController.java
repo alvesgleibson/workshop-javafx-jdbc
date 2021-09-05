@@ -37,7 +37,6 @@ public class MainViewController implements Initializable {
 		loadView("/gui/DepartmentList.fxml", (DepartmentListController controller) -> {
 			controller.setDepartmentService(new DepartmentService());
 			controller.updateTableView();
-
 		});
 	}
 
@@ -46,6 +45,7 @@ public class MainViewController implements Initializable {
 		loadView("/gui/About.fxml", x -> {
 		});
 	}
+
 
 	@Override
 	public void initialize(URL uri, ResourceBundle rb) {
