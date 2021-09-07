@@ -37,6 +37,8 @@ public class DepartmentFormController implements Initializable {
 	@FXML
 	private Label labelErroName;
 
+	
+
 	@FXML
 	private Button btSave;
 
@@ -140,5 +142,7 @@ public class DepartmentFormController implements Initializable {
 		}
 
 	}
+
+	
 
 }
