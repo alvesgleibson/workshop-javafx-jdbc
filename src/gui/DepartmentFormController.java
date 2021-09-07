@@ -3,7 +3,9 @@ package gui;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import db.DbException;
 import gui.listeners.DataChangeListener;
@@ -18,6 +20,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import model.entities.Department;
+import model.exceptions.ValidationException;
 import model.services.DepartmentService;
 
 public class DepartmentFormController implements Initializable {
@@ -67,7 +70,11 @@ public class DepartmentFormController implements Initializable {
 			notifyDataChangeListener();
 			Utils.currentScene(event).close();
 
-		} catch (DbException e) {
+		} catch (ValidationException e) {
+			setErrorMessage(e.getErrors());
+		}
+
+		catch (DbException e) {
 			Alerts.showAlert("Error saving Object", null, e.getMessage(), AlertType.ERROR);
 		}
 
@@ -80,7 +87,22 @@ public class DepartmentFormController implements Initializable {
 	}
 
 	private Department getFormDate() {
-		return new Department(Utils.tryParseToInt(txtId.getText()), txtName.getText());
+		Department dep = new Department();
+		ValidationException validException = new ValidationException("Validation Exception");
+
+		dep.setId(Utils.tryParseToInt(txtId.getText()));
+
+		if (txtName.getText() == null || txtName.getText().trim().equals("")) {
+			validException.addErrors("name", "Field Name can´t be empty");
+		}
+
+		dep.setName(txtName.getText());
+
+		if (validException.getErrors().size() > 0) {
+			throw validException;
+		}
+
+		return dep;
 	}
 
 	@FXML
@@ -106,6 +128,16 @@ public class DepartmentFormController implements Initializable {
 
 		txtId.setText(String.valueOf(departmentEntity.getId()));
 		txtName.setText(departmentEntity.getName());
+
+	}
+
+	public void setErrorMessage(Map<String, String> errors) {
+
+		Set<String> fields = errors.keySet();
+
+		if (fields.contains("name")) {
+			labelErroName.setText(errors.get("name"));
+		}
 
 	}
 
