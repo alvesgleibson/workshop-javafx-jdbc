@@ -31,5 +31,6 @@ nbbuild/
 dist/
 nbdist/
 
-#Eclipse
+# clipse
 .settings/
+
